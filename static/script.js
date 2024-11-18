@@ -49,7 +49,7 @@ async function sendMessageToBackend(message) {
         });
         const data = await response.json();
         console.log(data);
-        addMessageToChat(data.transcription, 'assistant', data.audio | null);
+        addMessageToChat(data.transcription, 'assistant', data.audio                                                                                            );
     } catch (error) {
         console.error('Error sending message:', error);
     }

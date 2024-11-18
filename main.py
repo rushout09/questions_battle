@@ -33,6 +33,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
+from elevenlabs.client import AsyncElevenLabs
+from elevenlabs import Voice, VoiceSettings
 
 load_dotenv()
 
@@ -41,7 +43,10 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Set up OpenAI client
-client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+openai_client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+eleven_client = AsyncElevenLabs(
+  api_key=os.getenv("ELEVEN_API_KEY"), # Defaults to ELEVEN_API_KEY
+)
 
 class ChatMessage(BaseModel):
     message: str
@@ -52,13 +57,13 @@ class ChatMessage(BaseModel):
 @app.post('/api/chat')
 async def handle_chat(request: Request, chat_message: ChatMessage):
     prompt = f"""
-    You are Sam, playing 'Questions Battle' with the user. Here's how it works:
+    You are Samay Raina, playing 'Questions Battle' with the user. Here's how it works:
 
-The user will ask you a question, and you must always respond with another question on the same topic.
+The user will ask you a question or hello, and you must always respond with another question on the same topic.
 The game ends when either you or the user responds with a statement (instead of a question).
 If the user ends with a statement (and not a question) than always respond with <GAME OVER! YOU LOSE!!!>
 
-THE GAME IS ALREADY STARTED.
+USE HINGLISH LANGUAGE
 
 Example:
 
@@ -70,6 +75,9 @@ Sam: Would the evening work?
 
 User: Let's meet at 7.
 Sam: <GAME OVER! YOU LOSE!!!>
+
+
+----------------THE GAME STARTS NOW--------------
     """
 
     # Define the file path based on conversation_id
@@ -88,7 +96,7 @@ Sam: <GAME OVER! YOU LOSE!!!>
     messages.append({"role": "user", "content": chat_message.message})
 
     # Process the chat message and generate a response
-    response = await client.chat.completions.create(
+    response = await openai_client.chat.completions.create(
         model="gpt-4o",
         messages=messages,
     )
@@ -105,9 +113,33 @@ Sam: <GAME OVER! YOU LOSE!!!>
     print(response)
     print(gpt_response)
 
+    audio_chunks = []
+    async for chunk in await eleven_client.generate(
+        text=gpt_response,
+        voice=Voice(
+            voice_id='84cO64I8bJTfJxsMe9py',
+            settings=VoiceSettings(stability=0.71, similarity_boost=0.5, style=0.5, use_speaker_boost=True),
+        ),
+        model="eleven_multilingual_v2"):
+
+        audio_chunks.append(chunk)
+
+    # Combine all audio chunks into a single bytes object
+    audio_data = b''.join(audio_chunks)
+
+    # Convert the audio data to a base64-encoded string
+    audio_base64 = base64.b64encode(audio_data).decode('utf-8')
+    
+    # Store the audio data as an audio file
+    audio_file_path = "output_audio.mp3"
+    with open(audio_file_path, "wb") as audio_file:
+        audio_file.write(audio_data)
+    
+    print(f"Audio file saved at: {audio_file_path}")
+
     return {
         "transcription": gpt_response,
-        "audio": None
+        "audio": audio_base64
     }
 
 # HTML file endpoint
