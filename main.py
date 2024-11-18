@@ -25,6 +25,8 @@
 
 import os
 import base64
+import json
+from pathlib import Path
 from openai import AsyncOpenAI
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
@@ -43,6 +45,7 @@ client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 class ChatMessage(BaseModel):
     message: str
+    conversation_id: str
     #audio: bool
     #audio_base64: str
 
@@ -68,32 +71,43 @@ Sam: Would the evening work?
 User: Let's meet at 7.
 Sam: <GAME OVER! YOU LOSE!!!>
     """
-    
+
+    # Define the file path based on conversation_id
+    conversation_file = Path(f"conversation_{chat_message.conversation_id}.jsonl")
+
+    # Check if the conversation file exists and load previous messages
+    if conversation_file.exists():
+        messages = []
+        with conversation_file.open("r") as file:
+            for line in file:
+                messages.append(json.loads(line))
+    else:
+        messages = [{"role": "system", "content": prompt}]
+
+    # Add the current user message to the messages list
+    messages.append({"role": "user", "content": chat_message.message})
+
     # Process the chat message and generate a response
     response = await client.chat.completions.create(
-        model="gpt-4o-audio-preview",
-        modalities=["text", "audio"],
-        messages=[
-            {"role": "system", "content": ""},
-            {"role": "user", "content": prompt}
-        ],
-        audio={
-            "voice": "alloy",
-            "format": "mp3"
-        }
+        model="gpt-4o",
+        messages=messages,
     )
+    gpt_response = response.choices[0].message.content
 
-    print(f"Audio Transcription: {response.choices[0].message.audio.transcript}")
-    print(f"Message Content: {response.choices[0].message.content}")
-    audio_data = base64.b64decode(response.choices[0].message.audio.data)
+    # Append the assistant's response to the messages list
+    messages.append({"role": "assistant", "content": gpt_response})
 
-    # Save the binary data to a file
-    with open("output_audio.mp3", "wb") as audio_file:  # Change the extension to .wav if needed
-        audio_file.write(audio_data)
+    # Rewrite the conversation file with the updated messages
+    with conversation_file.open("w") as file:
+        for message in messages:
+            file.write(json.dumps(message) + "\n")
+    
+    print(response)
+    print(gpt_response)
 
     return {
-        "transcription": response.choices[0].message.content if response.choices[0].message.content is not None else response.choices[0].message.audio.transcript,
-        "audio": response.choices[0].message.audio.data
+        "transcription": gpt_response,
+        "audio": None
     }
 
 # HTML file endpoint
@@ -116,3 +130,11 @@ if __name__ == "__main__":
 
 
 
+# Add samay raina voice either through play.ht or eleven labs.
+# Add intro music.
+# Have some flashy CSS.
+# Add limit to 15 questions.
+# Add rules:
+#   1. You have 15 questions to defeat gpt.
+#   2. You loose if you dont ask a question or if you cannot get an answer in 15 questions.
+# Deploy this.
