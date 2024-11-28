@@ -1,13 +1,32 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+#game-title {
+    margin: 20px;
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+}
+
+
 .chat-container {
     width: 100%;
     max-width: 600px;
-    margin: 0 auto;
+    margin: 20px;
     border: 1px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     height: 500px;
+    background-color: #fff;
 }
 
 .chat-messages {
@@ -59,5 +78,47 @@
 }
 
 #send-button:hover {
+    background-color: #0056b3;
+}
+
+.question-carousel {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.question-list {
+    display: inline-block;
+}
+
+.question-item {
+    display: inline-block;
+    padding: 8px 16px;
+    margin-right: 10px;
+    background-color: #f1f1f1;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.question-item:hover {
+    background-color: #e0e0e0;
+}
+
+#play-audio-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#play-audio-button:hover {
     background-color: #0056b3;
 }

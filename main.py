@@ -28,19 +28,23 @@ import base64
 import json
 from pathlib import Path
 from openai import AsyncOpenAI
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from elevenlabs.client import AsyncElevenLabs
 from elevenlabs import Voice, VoiceSettings
+import random
+import string
 
 load_dotenv()
 
 app = FastAPI()
 # Serve static files (HTML, CSS, JS)
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+games = {}
 
 # Set up OpenAI client
 openai_client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -54,6 +58,32 @@ class ChatMessage(BaseModel):
     #audio: bool
     #audio_base64: str
 
+def generate_game_code():
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+
+@app.post('/api/create-game')
+async def create_game():
+    game_code = generate_game_code()
+    games[game_code] = {
+        "players": [],
+        "current_turn": 0,
+        "messages": []
+    }
+    return {"game_code": game_code}
+
+
+@app.post('/api/join-game')
+async def join_game(game_code: str, player_name: str):
+    if game_code not in games:
+        raise HTTPException(status_code=404, detail="Game not found")
+    
+    if len(games[game_code]["players"]) >= 5:
+        raise HTTPException(status_code=400, detail="Game is full")
+    
+    games[game_code]["players"].append(player_name)
+    return {"message": f"{player_name} joined the game"}
+
+
 @app.post('/api/chat')
 async def handle_chat(request: Request, chat_message: ChatMessage):
     prompt = f"""
@@ -62,8 +92,6 @@ async def handle_chat(request: Request, chat_message: ChatMessage):
 The user will ask you a question or hello, and you must always respond with another question on the same topic.
 The game ends when either you or the user responds with a statement (instead of a question).
 If the user ends with a statement (and not a question) than always respond with <GAME OVER! YOU LOSE!!!>
-
-USE HINGLISH LANGUAGE
 
 Example:
 
@@ -161,12 +189,8 @@ if __name__ == "__main__":
 
 
 
-
-# Add samay raina voice either through play.ht or eleven labs.
-# Add intro music.
-# Have some flashy CSS.
-# Add limit to 15 questions.
-# Add rules:
-#   1. You have 15 questions to defeat gpt.
-#   2. You loose if you dont ask a question or if you cannot get an answer in 15 questions.
-# Deploy this.
+"""
+Let's make this game multiplayer. One should be able to create a game and add up to 5 friends. 
+Friends can join using a code to the same game. So it will be 5 friends against AI. 
+Each friend will get a chance to ask a question. Whoever is able to survive till last will win the game.
+"""
