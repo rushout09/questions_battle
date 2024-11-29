@@ -11,24 +11,39 @@
     </audio>
     <button id="play-audio-button">🎵 Play/Stop Music</button>
     <h1 id="game-title">Questions Battle Game</h1>
-    <div class="chat-container">
-        <div class="chat-messages">
-            <!-- Messages will be displayed here -->
-        </div>
-        <div class="question-carousel">
-            <div class="question-list" id="question-list">
-                <!-- Questions will be dynamically inserted here -->
-            </div>
-        </div>
-        <div class="chat-input">
-            <input type="text" id="chat-input" placeholder="Type your message..." />
-            <button id="send-button">Send</button>
-        </div>
-    </div>
-    <div>
+
+    <!-- Dialog box for Create or Join Game -->
+    <div id="game-dialog" class="dialog">
         <button id="create-game-button">Create Game</button>
+        <hr> <!-- Separator -->
         <input type="text" id="join-game-code" placeholder="Enter Game Code" />
         <button id="join-game-button">Join Game</button>
+    </div>
+
+    <!-- Main game interface, initially hidden -->
+    <div id="game-interface" style="display: none;">
+        <div class="chat-container">
+            <div class="chat-messages">
+                <!-- Messages will be displayed here -->
+            </div>
+            <div class="question-carousel">
+                <div class="question-list" id="question-list">
+                    <!-- Questions will be dynamically inserted here -->
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chat-input" placeholder="Type your message..." />
+                <button id="send-button">Send</button>
+            </div>
+        </div>
+        <div id="game-data-container">
+            <h2>Game Data</h2>
+            <pre id="game-data"></pre>
+        </div>
+        <div>
+            <button id="start-game-button">Start Game</button>
+            <button id="end-game-button">End Game</button>
+        </div>
     </div>
 
     <script src="static/script.js"></script>
