@@ -28,9 +28,12 @@ document.getElementById('create-game-button').addEventListener('click', async ()
         playerName = prompt("Enter your name:");
         if (!playerName) {
             alert("Player name cannot be empty. Please enter your name.");
+            break;
         }
     }
-    
+    if (!playerName) {
+        return;
+    }
     // Generate a random alphanumeric uppercase room ID
     const roomId = Math.random().toString(36).substring(2, 8).toUpperCase().replace(/[^A-Z0-9]/g, '');
     sessionStorage.setItem('room_id', roomId);
@@ -76,9 +79,12 @@ document.getElementById('join-game-button').addEventListener('click', async () =
         playerName = prompt("Enter your name:");
         if (!playerName) {
             alert("Player name cannot be empty. Please enter your name.");
+            break;
         }
     }
-
+    if (!playerName) {
+        return;
+    }
     sessionStorage.setItem('room_id', roomId);
     sessionStorage.setItem('player_name', playerName);
 
