@@ -62,6 +62,7 @@ document.getElementById('create-game-button').addEventListener('click', async ()
     document.getElementById('game-dialog').style.display = 'none';
     document.getElementById('game-interface').style.display = 'block';
     document.getElementById('start-game-button').style.display = 'block';
+    document.getElementById('question-list').style.display = 'block';
     
     // Show the room ID to share
     alert(`Game created! Your room code is: ${roomId}`);
@@ -124,6 +125,7 @@ document.getElementById('start-game-button').addEventListener('click', () => {
     gameSocket.send(JSON.stringify({
         type: 'start_game'
     }));
+    document.getElementById('start-game-button').style.display = 'none';
 });
 
 // Chat event handlers

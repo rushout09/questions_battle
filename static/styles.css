@@ -1,124 +1,300 @@
+/* Base styles and animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 body {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: #2c3e50;
 }
 
 #game-title {
-    margin: 20px;
-    font-size: 24px;
-    color: #333;
+    margin: 32px 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
     text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.8s ease-out;
 }
 
+/* Dialog styles */
+.dialog {
+    background-color: white;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 300px;
+}
 
+.dialog button {
+    padding: 12px 24px;
+    background-color: #4A90E2;
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.dialog button:hover {
+    background-color: #357ABD;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+}
+
+#game-interface {
+    display: flex;
+    gap: 24px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Chat container styles */
 .chat-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    flex: 1;
+    max-width: 800px;
+    border-radius: 16px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: 500px;
-    background-color: #fff;
+    height: 600px;
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
 }
 
 .chat-messages {
     flex: 1;
-    padding: 10px;
+    padding: 24px;
     overflow-y: auto;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
+    scroll-behavior: smooth;
 }
 
+/* Message styles */
 .chat-message {
-    margin-bottom: 10px;
-    padding: 8px;
-    border-radius: 5px;
-    max-width: 80%;
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    max-width: 85%;
+    font-size: 1rem;
+    line-height: 1.5;
+    animation: fadeIn 0.3s ease-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .chat-message.user {
-    background-color: #d1e7dd;
-    align-self: flex-end;
+    background-color: #4A90E2;
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
 }
 
 .chat-message.assistant {
-    background-color: #f8d7da;
-    align-self: flex-start;
+    background-color: #F0F2F5;
+    color: #2c3e50;
+    margin-right: auto;
+    border-bottom-left-radius: 4px;
 }
 
+/* Game data container styles */
+#game-data-container {
+    width: 300px;
+    height: fit-content;
+    background-color: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    margin-top: 0; /* Remove any top margin */
+}
+
+#game-data-container h2 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+#game-data {
+    background-color: #f8f9fa;
+    padding: 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    overflow-x: auto;
+}
+
+/* Question carousel styles */
+.question-carousel {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
+    scrollbar-width: thin;
+    scrollbar-color: #4A90E2 #f8f9fa;
+}
+
+.question-list {
+    display: inline-flex;
+    gap: 12px;
+    padding: 4px;
+}
+
+.question-item {
+    padding: 8px 16px;
+    background-color: white;
+    border: 1px solid #e1e8ed;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    color: #2c3e50;
+}
+
+.question-item:hover {
+    background-color: #4A90E2;
+    color: white;
+    border-color: #4A90E2;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+}
+
+/* Chat input styles */
 .chat-input {
     display: flex;
-    border-top: 1px solid #ccc;
-    padding: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 16px;
     background-color: #fff;
+    position: relative;
+    gap: 12px;
 }
 
 #chat-input {
     flex: 1;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-right: 10px;
+    padding: 12px 16px;
+    border: 2px solid #e1e8ed;
+    border-radius: 24px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    outline: none;
+}
+
+#chat-input:focus {
+    border-color: #4A90E2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
 #send-button {
-    padding: 8px 16px;
-    background-color: #007bff;
+    padding: 12px 24px;
+    background-color: #4A90E2;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 24px;
     cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
-#send-button:hover {
-    background-color: #0056b3;
-}
-
-.question-carousel {
-    overflow-x: auto;
-    white-space: nowrap;
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 10px;
-}
-
-.question-list {
-    display: inline-block;
-}
-
-.question-item {
-    display: inline-block;
-    padding: 8px 16px;
-    margin-right: 10px;
-    background-color: #f1f1f1;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.question-item:hover {
-    background-color: #e0e0e0;
-}
-
+/* Audio button styles */
 #play-audio-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    padding: 8px 16px;
-    background-color: #007bff;
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    padding: 12px 24px;
+    background-color: #4A90E2;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 24px;
     cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
-#play-audio-button:hover {
-    background-color: #0056b3;
+/* Start game button */
+#start-game-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #4A90E2;
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-align: center;
+    width: auto; /* Change from 100% to auto */
+    min-width: 120px;
+}
+
+#start-game-button:hover {
+    background-color: #357ABD;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    #game-interface {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #game-data-container {
+        width: 100%;
+        max-width: 800px;
+        margin-top: 24px;
+    }
+
+    .chat-container {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .chat-container {
+        margin: 0;
+        height: 500px;
+    }
+    
+    #game-title {
+        font-size: 2rem;
+        margin: 24px 0;
+    }
+    
+    .dialog {
+        min-width: auto;
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    #send-button {
+        padding: 12px 16px;
+    }
+    
+    .question-item {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
 }
