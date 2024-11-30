@@ -27,9 +27,9 @@ class GameManager:
             "admin": player_name,
             "game_status": GameStatus.CREATED.value,
             "player_status": [PlayerStatus.PLAYING.value],
-            "timer": 30,
+            "timer": 10,
             "current_player": player_name,
-            "waiting_for_question": True  # True when waiting for player to ask question
+            "waiting_for_ai": False  # True when waiting for player to ask question
         }
         await self.redis.set(f"game:{room_id}", json.dumps(game_data))
         await self.broadcast_game_update(room_id)
@@ -59,8 +59,8 @@ class GameManager:
             
         game_data["game_status"] = GameStatus.STARTED.value
         game_data["current_player"] = game_data["players"][0]
-        game_data["timer"] = 30
-        game_data["waiting_for_question"] = True
+        game_data["timer"] = 10
+        game_data["waiting_for_ai"] = False
         
         await self.redis.set(f"game:{room_id}", json.dumps(game_data))
         await self.broadcast_game_update(room_id)
@@ -79,7 +79,7 @@ class GameManager:
             game_data = await self.get_game_data(room_id)
             remaining_time = game_data["timer"]
 
-            while remaining_time > 0:
+            while remaining_time > -1:
                 game_data["timer"] = remaining_time
                 await self.redis.set(f"game:{room_id}", json.dumps(game_data))
                 await self.broadcast_game_update(room_id)
@@ -117,6 +117,7 @@ class GameManager:
             await self.broadcast_game_update(room_id)
         else:
             await self.redis.set(f"game:{room_id}", json.dumps(game_data))
+            await self.broadcast_game_update(room_id)
             # Move to next player
             await self.next_turn(room_id)
         
@@ -126,15 +127,14 @@ class GameManager:
         game_data = await self.get_game_data(room_id)
         
         if (game_data["game_status"] != GameStatus.STARTED.value or 
-            game_data["current_player"] != player_name or 
-            not game_data["waiting_for_question"]):
+            game_data["current_player"] != player_name or game_data["waiting_for_ai"]):
             return False
 
         # Cancel the timer since player asked in time
         if room_id in self.active_timers:
             self.active_timers[room_id].cancel()
 
-        game_data["waiting_for_question"] = False
+        game_data["waiting_for_ai"] = True
         await self.redis.set(f"game:{room_id}", json.dumps(game_data))
         await self.broadcast_game_update(room_id)
         return True
@@ -145,8 +145,8 @@ class GameManager:
         if game_data["game_status"] != GameStatus.STARTED.value:
             return False
         
+        game_data["waiting_for_ai"] = False
         if player_lost:
-            game_data = await self.get_game_data(room_id)
             current_player_index = game_data["current_turn"]
             # Mark current player as lost
             game_data["player_status"][current_player_index] = PlayerStatus.LOST.value
@@ -163,21 +163,26 @@ class GameManager:
             await self.broadcast_game_update(room_id)
         else:
             await self.redis.set(f"game:{room_id}", json.dumps(game_data))
+            await self.broadcast_game_update(room_id)
             # Move to next player
             await self.next_turn(room_id)
 
     async def next_turn(self, room_id: str):
+        print("inside next turn")
         game_data = await self.get_game_data(room_id)
-        playing_players = [i for i, status in enumerate(game_data["player_status"]) 
-                         if status == PlayerStatus.PLAYING.value]
-        
-        current_index = playing_players.index(game_data["current_turn"])
-        next_index = playing_players[(current_index + 1) % len(playing_players)]
+        print(game_data)
+        current_player_index = game_data["current_turn"]
+        print(current_player_index)
+
+        next_index = (current_player_index + 1) % len(game_data["players"])
+        while game_data["player_status"][next_index] == PlayerStatus.LOST.value:
+            next_index = (next_index + 1) % len(game_data["players"])
+
+        print(next_index)
         
         game_data["current_turn"] = next_index
         game_data["current_player"] = game_data["players"][next_index]
-        game_data["timer"] = 30  # Reset timer
-        game_data["waiting_for_question"] = True
+        game_data["timer"] = 10  # Reset timer
         
         await self.redis.set(f"game:{room_id}", json.dumps(game_data))
         await self.broadcast_game_update(room_id)

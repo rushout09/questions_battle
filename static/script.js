@@ -61,6 +61,7 @@ document.getElementById('create-game-button').addEventListener('click', async ()
 
     document.getElementById('game-dialog').style.display = 'none';
     document.getElementById('game-interface').style.display = 'block';
+    document.getElementById('start-game-button').style.display = 'block';
     
     // Show the room ID to share
     alert(`Game created! Your room code is: ${roomId}`);
