@@ -1,300 +1,129 @@
-/* Base styles and animations */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
 
+/* General styles for the body */
 body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    font-family: Arial, sans-serif;
     margin: 0;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    color: #2c3e50;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
 }
 
-#game-title {
-    margin: 32px 0;
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #2c3e50;
+/* Header styles */
+h1#game-title {
     text-align: center;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.8s ease-out;
+    margin-top: 20px;
+    color: #4a4a4a;
 }
 
-/* Dialog styles */
-.dialog {
-    background-color: white;
-    padding: 32px;
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    min-width: 300px;
-}
-
-.dialog button {
-    padding: 12px 24px;
-    background-color: #4A90E2;
-    color: #fff;
+/* Button styles */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
     border: none;
-    border-radius: 24px;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
+    font-size: 16px;
 }
 
-.dialog button:hover {
-    background-color: #357ABD;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+button:hover {
+    background-color: #45a049;
 }
 
-#game-interface {
-    display: flex;
-    gap: 24px;
+/* Dialog box styles */
+.dialog {
+    width: 300px;
+    margin: 20px auto;
     padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
-/* Chat container styles */
+/* Input field styles */
+input[type="text"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.question-list {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.question-item {
+    margin-right: 10px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
 .chat-container {
-    flex: 1;
-    max-width: 800px;
-    border-radius: 16px;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: 600px;
-    background-color: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    height: 400px; /* Adjust height as needed */
 }
 
 .chat-messages {
     flex: 1;
-    padding: 24px;
+    padding: 20px;
     overflow-y: auto;
-    background-color: #ffffff;
-    scroll-behavior: smooth;
+    border-bottom: 1px solid #ddd;
 }
 
-/* Message styles */
-.chat-message {
-    margin-bottom: 16px;
-    padding: 12px 16px;
-    border-radius: 12px;
-    max-width: 85%;
-    font-size: 1rem;
-    line-height: 1.5;
-    animation: fadeIn 0.3s ease-out;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+.chat-input {
+    display: flex;
+    padding: 10px;
+    background-color: #f9f9f9;
 }
 
-.chat-message.user {
-    background-color: #4A90E2;
-    color: white;
-    margin-left: auto;
-    border-bottom-right-radius: 4px;
+.chat-input input[type="text"] {
+    flex: 1;
+    margin-right: 10px;
 }
 
-.chat-message.assistant {
-    background-color: #F0F2F5;
-    color: #2c3e50;
-    margin-right: auto;
-    border-bottom-left-radius: 4px;
+.chat-input button {
+    flex-shrink: 0;
 }
 
 /* Game data container styles */
 #game-data-container {
-    width: 300px;
-    height: fit-content;
-    background-color: white;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    margin-top: 0; /* Remove any top margin */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 600px;
 }
 
 #game-data-container h2 {
     margin-top: 0;
-    color: #2c3e50;
+    color: #4a4a4a;
 }
 
-#game-data {
-    background-color: #f8f9fa;
-    padding: 16px;
-    border-radius: 8px;
-    margin: 16px 0;
+#game-data-container pre {
+    background-color: #f4f4f9;
+    padding: 10px;
+    border-radius: 4px;
     overflow-x: auto;
-}
-
-/* Question carousel styles */
-.question-carousel {
-    overflow-x: auto;
-    white-space: nowrap;
-    padding: 16px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    background-color: #f8f9fa;
-    scrollbar-width: thin;
-    scrollbar-color: #4A90E2 #f8f9fa;
 }
 
 .question-list {
-    display: inline-flex;
-    gap: 12px;
-    padding: 4px;
-}
-
-.question-item {
-    padding: 8px 16px;
-    background-color: white;
-    border: 1px solid #e1e8ed;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.9rem;
+    display: flex;
+    overflow-x: auto;
     white-space: nowrap;
-    color: #2c3e50;
-}
-
-.question-item:hover {
-    background-color: #4A90E2;
-    color: white;
-    border-color: #4A90E2;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
-}
-
-/* Chat input styles */
-.chat-input {
-    display: flex;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 16px;
-    background-color: #fff;
-    position: relative;
-    gap: 12px;
-}
-
-#chat-input {
-    flex: 1;
-    padding: 12px 16px;
-    border: 2px solid #e1e8ed;
-    border-radius: 24px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    outline: none;
-}
-
-#chat-input:focus {
-    border-color: #4A90E2;
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-}
-
-#send-button {
-    padding: 12px 24px;
-    background-color: #4A90E2;
-    color: #fff;
-    border: none;
-    border-radius: 24px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-/* Audio button styles */
-#play-audio-button {
-    position: fixed;
-    top: 24px;
-    right: 24px;
-    padding: 12px 24px;
-    background-color: #4A90E2;
-    color: #fff;
-    border: none;
-    border-radius: 24px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-/* Start game button */
-#start-game-button {
-    display: inline-block;
-    padding: 12px 24px;
-    background-color: #4A90E2;
-    color: #fff;
-    border: none;
-    border-radius: 24px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    text-align: center;
-    width: auto; /* Change from 100% to auto */
-    min-width: 120px;
-}
-
-#start-game-button:hover {
-    background-color: #357ABD;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
-}
-
-/* Responsive design */
-@media (max-width: 1024px) {
-    #game-interface {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    #game-data-container {
-        width: 100%;
-        max-width: 800px;
-        margin-top: 24px;
-    }
-
-    .chat-container {
-        width: 100%;
-    }
-}
-
-@media (max-width: 768px) {
-    .chat-container {
-        margin: 0;
-        height: 500px;
-    }
-    
-    #game-title {
-        font-size: 2rem;
-        margin: 24px 0;
-    }
-    
-    .dialog {
-        min-width: auto;
-        width: 90%;
-    }
-}
-
-@media (max-width: 480px) {
-    #send-button {
-        padding: 12px 16px;
-    }
-    
-    .question-item {
-        padding: 6px 12px;
-        font-size: 0.8rem;
-    }
 }

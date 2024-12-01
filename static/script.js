@@ -62,8 +62,12 @@ document.getElementById('create-game-button').addEventListener('click', async ()
     document.getElementById('game-dialog').style.display = 'none';
     document.getElementById('game-interface').style.display = 'block';
     document.getElementById('start-game-button').style.display = 'block';
-    document.getElementById('question-list').style.display = 'block';
-    
+    const questionList = document.getElementById('question-list');
+    questionList.style.display = 'flex';
+    questionList.style.overflowX = 'auto';
+    questionList.style.whiteSpace = 'nowrap';
+    questionList.style.padding = '10px';
+    questionList.style.backgroundColor = '#f9f9f9';
     // Show the room ID to share
     alert(`Game created! Your room code is: ${roomId}`);
 });
@@ -125,7 +129,7 @@ document.getElementById('start-game-button').addEventListener('click', () => {
     gameSocket.send(JSON.stringify({
         type: 'start_game'
     }));
-    document.getElementById('start-game-button').style.display = 'none';
+    
 });
 
 // Chat event handlers
@@ -185,6 +189,9 @@ function initializeWebSockets(roomId, playerName) {
             sessionStorage.setItem('game_status', gameData.data.game_status);
             sessionStorage.setItem('current_player', gameData.data.current_player);
             updateGameDataUI(gameData);
+            if (gameData.data.game_status === "started") {
+                document.getElementById('start-game-button').style.display = 'none';
+            }
         }
     };
 
@@ -238,6 +245,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const questionItem = document.createElement('div');
         questionItem.className = 'question-item';
         questionItem.textContent = question;
+        questionItem.style.marginRight = '10px';
+        questionItem.style.cursor = 'pointer';
+        questionItem.style.whiteSpace = 'nowrap';
         questionItem.addEventListener('click', () => {
             if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
                 chatInput.value = question; // Add the question to the message box
