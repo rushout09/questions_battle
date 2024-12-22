@@ -27,7 +27,7 @@ class GameManager:
             "admin": player_name,
             "game_status": GameStatus.CREATED.value,
             "player_status": [PlayerStatus.PLAYING.value],
-            "timer": 10,
+            "timer": 60,
             "current_player": player_name,
             "waiting_for_ai": False  # True when waiting for player to ask question
         }
@@ -59,7 +59,7 @@ class GameManager:
             
         game_data["game_status"] = GameStatus.STARTED.value
         game_data["current_player"] = game_data["players"][0]
-        game_data["timer"] = 10
+        game_data["timer"] = 60
         game_data["waiting_for_ai"] = False
         
         await self.redis.set(f"game:{room_id}", json.dumps(game_data))
@@ -182,7 +182,7 @@ class GameManager:
         
         game_data["current_turn"] = next_index
         game_data["current_player"] = game_data["players"][next_index]
-        game_data["timer"] = 10  # Reset timer
+        game_data["timer"] = 60  # Reset timer
         
         await self.redis.set(f"game:{room_id}", json.dumps(game_data))
         await self.broadcast_game_update(room_id)
